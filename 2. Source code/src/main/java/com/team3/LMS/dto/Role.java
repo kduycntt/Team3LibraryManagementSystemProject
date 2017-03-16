@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "role")
 public class Role implements Serializable {
@@ -27,6 +25,7 @@ public class Role implements Serializable {
 	@Column(name = "role_name")
 	private String roleName;
 
+	// bi-directional many-to-many association to UserInfo
 	@ManyToMany(mappedBy = "roles")
 	private List<UserInfo> userInfos;
 
@@ -48,8 +47,7 @@ public class Role implements Serializable {
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-	
-	@JsonIgnoreProperties({ "roles" })
+
 	public List<UserInfo> getUserInfos() {
 		return this.userInfos;
 	}

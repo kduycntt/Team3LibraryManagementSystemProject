@@ -34,6 +34,7 @@ public class Payment implements Serializable {
 	@Column(name = "payment_amount")
 	private int paymentAmount;
 
+	// bi-directional many-to-one association to UserInfo
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private UserInfo userInfo;

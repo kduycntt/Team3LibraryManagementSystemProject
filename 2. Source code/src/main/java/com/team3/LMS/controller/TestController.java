@@ -1,4 +1,4 @@
-/*package com.team3.LMS.controller;
+package com.team3.LMS.controller;
 
 import java.time.Year;
 import java.util.Date;
@@ -22,6 +22,8 @@ public class TestController {
 	@Autowired
 	public BookCategoryDetailDao bookCategoryDetailDao;
 	@Autowired
+	public TicketBookUserDao ticketBookUserDao;
+	@Autowired
 	public PublisherDetailDao publisherDetailDao;
 
 	@RequestMapping(value = "/listbook", method = RequestMethod.GET)
@@ -38,7 +40,7 @@ public class TestController {
 		return temp.toString();
 	}
 
-	@RequestMapping(value = "/addBookToBookCategory", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/addBookToBookCategory", method = RequestMethod.GET)
 	@ResponseBody
 	public String getBookInfo() {
 		BookTestCategory categoryA = new BookTestCategory("Category A");
@@ -53,7 +55,7 @@ public class TestController {
 		bookTestCategoryDao.save(categoryA);
 		String temp = bookTestCategoryDao.findAll().toString();
 		return temp;
-	}
+	}*/
 
 	@RequestMapping(value = "/addBook", method = RequestMethod.GET)
 	@ResponseBody
@@ -77,4 +79,3 @@ public class TestController {
 		return books.toString();
 	}
 }
-*/

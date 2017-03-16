@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,8 +18,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * The persistent class for the user_info database table.
+ * 
+ */
 @Entity
 @Table(name = "user_info")
 public class UserInfo implements Serializable {
@@ -40,7 +45,8 @@ public class UserInfo implements Serializable {
 
 	@Column(name = "phone_number")
 	private int phoneNumber;
-
+	
+	@Column(name = "pword")
 	private String pword;
 
 	@Column(name = "real_name")
@@ -48,26 +54,42 @@ public class UserInfo implements Serializable {
 
 	private String sex;
 
-	private byte valid;
+	private boolean valid;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "dayofbirth")
 	private Date dayOfBirth;
 
+	// bi-directional many-to-one association to Payment
 	@OneToMany(mappedBy = "userInfo")
 	private List<Payment> payments;
 
+	// bi-directional many-to-one association to ReturnBook
 	@OneToMany(mappedBy = "userInfo")
-	private List<Ticket> tickets;
+	private List<ReturnBook> returnBooks;
 
+	// bi-directional many-to-many association to Role
 	@ManyToMany
 	@JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "role_id") })
 	private List<Role> roles;
 
+	// bi-directional many-to-one association to TicketBookUser
+	@OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<TicketBookUser> ticketBookUsers;
+
 	public UserInfo() {
 	}
-
+	public UserInfo(String realname, String address, int phoneNumber, String email, String pword, String sex, String degree, boolean valid){
+		this.realName = realname;
+		this.address = address;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+		this.pword = pword;
+		this.sex = sex;
+		this.degree = degree;
+		this.valid = valid;
+	}
 	public int getUserId() {
 		return this.userId;
 	}
@@ -82,14 +104,6 @@ public class UserInfo implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public Date getDayofBirth() {
-		return this.dayOfBirth;
-	}
-
-	public void setDayofBirth(Date dayofBirth) {
-		this.dayOfBirth = dayofBirth;
 	}
 
 	public String getDegree() {
@@ -148,15 +162,23 @@ public class UserInfo implements Serializable {
 		this.sex = sex;
 	}
 
-	public byte getValid() {
-		return this.valid;
+	public boolean isValid() {
+		return valid;
 	}
 
-	public void setValid(byte valid) {
+	public void setValid(boolean valid) {
 		this.valid = valid;
 	}
-	
-	@JsonIgnoreProperties({ "userInfo" })
+
+	public Date getDayOfBirth() {
+		return dayOfBirth;
+	}
+
+	public void setDayOfBirth(Date dayOfBirth) {
+		this.dayOfBirth = dayOfBirth;
+	}
+
+	@JsonIgnore
 	public List<Payment> getPayments() {
 		return this.payments;
 	}
@@ -178,37 +200,60 @@ public class UserInfo implements Serializable {
 
 		return payment;
 	}
-	
-	@JsonIgnoreProperties({ "userInfo" })
-	public List<Ticket> getTickets() {
-		return this.tickets;
+
+	@JsonIgnore
+	public List<ReturnBook> getReturnBooks() {
+		return this.returnBooks;
 	}
 
-	public void setTickets(List<Ticket> tickets) {
-		this.tickets = tickets;
+	public void setReturnBooks(List<ReturnBook> returnBooks) {
+		this.returnBooks = returnBooks;
 	}
 
-	public Ticket addTicket(Ticket ticket) {
-		getTickets().add(ticket);
-		ticket.setUserInfo(this);
+	public ReturnBook addReturnBook(ReturnBook returnBook) {
+		getReturnBooks().add(returnBook);
+		returnBook.setUserInfo(this);
 
-		return ticket;
+		return returnBook;
 	}
 
-	public Ticket removeTicket(Ticket ticket) {
-		getTickets().remove(ticket);
-		ticket.setUserInfo(null);
+	public ReturnBook removeReturnBook(ReturnBook returnBook) {
+		getReturnBooks().remove(returnBook);
+		returnBook.setUserInfo(null);
 
-		return ticket;
+		return returnBook;
 	}
-	
-	@JsonIgnoreProperties({ "userInfos" })
+
+	@JsonIgnore
 	public List<Role> getRoles() {
 		return this.roles;
 	}
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	@JsonIgnore
+	public List<TicketBookUser> getTicketBookUsers() {
+		return this.ticketBookUsers;
+	}
+
+	public void setTicketBookUsers(List<TicketBookUser> ticketBookUsers) {
+		this.ticketBookUsers = ticketBookUsers;
+	}
+
+	public TicketBookUser addTicketBookUser(TicketBookUser ticketBookUser) {
+		getTicketBookUsers().add(ticketBookUser);
+		ticketBookUser.setUserInfo(this);
+
+		return ticketBookUser;
+	}
+
+	public TicketBookUser removeTicketBookUser(TicketBookUser ticketBookUser) {
+		getTicketBookUsers().remove(ticketBookUser);
+		ticketBookUser.setUserInfo(null);
+
+		return ticketBookUser;
 	}
 
 }

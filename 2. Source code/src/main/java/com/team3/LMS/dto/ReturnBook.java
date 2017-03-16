@@ -14,8 +14,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "return_book")
 public class ReturnBook implements Serializable {
@@ -31,18 +29,19 @@ public class ReturnBook implements Serializable {
 	private int fine;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "returned_date")
-	private Date returnedDate;
+	@Column(name = "return_date")
+	private Date returnDate;
 
+	// bi-directional many-to-one association to UserInfo
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private Ticket ticket;
+	private UserInfo userInfo;
 
 	public ReturnBook() {
 	}
 
 	public int getReturnBookId() {
-		return this.returnBookId;
+		return returnBookId;
 	}
 
 	public void setReturnBookId(int returnBookId) {
@@ -50,28 +49,27 @@ public class ReturnBook implements Serializable {
 	}
 
 	public int getFine() {
-		return this.fine;
+		return fine;
 	}
 
 	public void setFine(int fine) {
 		this.fine = fine;
 	}
 
-	public Date getReturnedDate() {
-		return this.returnedDate;
-	}
-
-	public void setReturnedDate(Date returnedDate) {
-		this.returnedDate = returnedDate;
+	public Date getReturnDate() {
+		return returnDate;
 	}
 	
-	@JsonIgnoreProperties({ "returnBooks" })
-	public Ticket getTicket() {
-		return this.ticket;
+	public void setReturnDate(Date returnDate) {
+		this.returnDate = returnDate;
 	}
 
-	public void setTicket(Ticket ticket) {
-		this.ticket = ticket;
+	public UserInfo getUserInfo() {
+		return userInfo;
+	}
+
+	public void setUserInfo(UserInfo userInfo) {
+		this.userInfo = userInfo;
 	}
 
 }
